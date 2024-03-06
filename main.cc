@@ -12,10 +12,20 @@
 #include <unordered_map>
 
 using namespace std;
+int INFINITY = numeric_limits<int>::max();
 
 unsigned expanded = 0;
 unsigned generated = 0;
 int tt_threshold = 32; // threshold to save entries in TT
+
+
+bool GR(int a, int b){
+    return a > b;
+}
+
+bool GEQ(int a, int b){
+    return a >= b;
+}
 
 // Transposition table (it is not necessary to implement TT)
 struct stored_info_t {
@@ -43,6 +53,122 @@ int negamax(state_t state, int depth, int color, bool use_tt = false);
 int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_tt = false);
 int scout(state_t state, int depth, int color, bool use_tt = false);
 int negascout(state_t state, int depth, int alpha, int beta, int color, bool use_tt = false);
+
+// Negamax algorithm
+int negamax(state_t state, int depth, int color, bool use_tt)  {
+    if (depth == 0 || state.terminal())
+        return color * state.value();
+    
+    int alpha = -INFINITY;
+    vector<state_t> node = state.get_valid_moves(color == 1);
+    for(auto child : node){
+        generated++;
+        alpha = max(alpha , -negamax(child, depth - 1, -color));
+    }
+
+    expanded++;
+    return alpha;
+}
+
+// Negamax algorithm with prunning alpha beta
+int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_tt){
+    if (depth == 0 || state.terminal())
+        return color * state.value();
+
+    int score = -INFINITY;
+    int val;
+    vector<state_t> node = state.get_valid_moves(color == 1);
+    for(auto child : node){
+        generated++;
+        val = -negamax(child, depth - 1, -beta, -alpha, -color);
+        score = max(score , val);
+        alpha = max(alpha , score);
+        if (alpha >= beta) 
+            break;
+    }
+
+    expanded++;
+    return score;
+}
+
+// Tetst algorithm for scout
+bool test(state_t state, int depth, int color, int score, bool (*condition)(int,int)){
+    if (depth == 0 || state.terminal())
+        return condition(state.value(), score);
+
+    int isMax = color == 1;
+    vector<state_t> node = state.get_valid_moves(isMax);
+    for(auto child : node){
+        generated++;
+        if (isMax && test(child, depth - 1, -color, score , condition))
+            return true;
+        if (!isMax && !test(child, depth - 1, -color, score , condition))
+            return false;
+    }
+
+    expanded++;
+    return !(isMax);
+}
+
+int scout(state_t state, int depth, int color, bool use_tt){
+    if (depth == 0 || state.terminal())
+        return state.value();
+    
+    int score = 0;
+    bool first = true;
+    bool isMax = color == 1;
+    vector<state_t> node = state.get_valid_moves(isMax);
+    for(auto child : node){
+        generated++;
+        if (first){
+            score = scout(child, depth - 1, -color);
+            first = false;
+        }
+        else {
+            if (isMax && test(child, depth, -color, score, GR))
+                score = scout(child, depth - 1, -color);
+
+            if (!isMax && !test(child, depth, -color, score, GEQ))
+                score = scout(child, depth - 1, -color);
+        }
+    }
+
+    expanded++;
+    return score;
+}
+
+// Scout algorith with prunning alpha beta
+int negascout(state_t state, int depth, int alpha, int beta, int color, bool use_tt){
+    if (depth == 0 || state.terminal())
+        return color * state.value();
+    
+    bool first = true;
+    bool isMax = color == 1;
+    vector<state_t> node = state.get_valid_moves(isMax);
+    for(auto child : node){
+        generated++;
+        int score;
+
+        if (first){
+            first = false;
+            score = -negascout(child, depth -1, -beta, -alpha, -color);
+        }
+
+        else {
+            score = -negascout(child, depth -1, -alpha - 1, -alpha, -color);
+            if (alpha < score && score < beta){
+                score = -negascout(child, depth -1, -beta, -score, -color);
+            }
+        }
+
+        alpha = max(alpha, score);
+        if (alpha >= beta)
+            break;
+    }
+
+    expanded++;
+    return alpha;
+}
 
 int main(int argc, const char **argv) {
     state_t pv[128];

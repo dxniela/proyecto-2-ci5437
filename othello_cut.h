@@ -131,19 +131,17 @@ class state_t {
                 valid_moves.push_back(pos);
             }
         }
+
         return valid_moves.empty() ? -1 : valid_moves[lrand48() % valid_moves.size()];
     }
-
-    std::vector<int> get_valid_moves(bool color) {
-        std::vector<int> valid_moves;
+    std::vector<state_t> get_valid_moves(bool color) {
+        std::vector<state_t> valid_moves;
         for( int pos = 0; pos < DIM; ++pos ) {
             if( (color && is_black_move(pos)) || (!color && is_white_move(pos)) ) {
-                valid_moves.push_back(pos);
+                valid_moves.push_back(move(color, pos));
             }
         }
-        if(valid_moves.empty()) {
-            return {DIM};
-        }
+        
         return valid_moves;
     }
 
@@ -211,7 +209,6 @@ inline bool state_t::outflank(bool color, int pos) const {
         if( (p < x - 1) && (p >= cols[pos - 4]) && !is_free(*p) ) return true;
     }
 
-    // Check diagonal1
     x = dia1[pos - 4];
     while( *x != pos ) ++x;
     if( *(x+1) != -1 ) {
@@ -222,7 +219,7 @@ inline bool state_t::outflank(bool color, int pos) const {
         for( p = x - 1; (p >= dia1[pos - 4]) && !is_free(*p) && (color ^ is_black(*p)); --p );
         if( (p < x - 1) && (p >= dia1[pos - 4]) && !is_free(*p) ) return true;
     }
-    // Check diagonal2
+
     x = dia2[pos - 4];
     while( *x != pos ) ++x;
     if( *(x+1) != -1 ) {
@@ -296,7 +293,6 @@ inline state_t state_t::move(bool color, int pos) const {
         }
     }
 
-    // Process diagonal1
     x = dia1[pos - 4];
     while( *x != pos ) ++x;
     if( *(x+1) != -1 ) {
@@ -311,7 +307,7 @@ inline state_t state_t::move(bool color, int pos) const {
             for( const int *q = x - 1; q > p; --q ) s.set_color(color, *q);
         }
     }
-    // Process diagonal2
+
     x = dia2[pos - 4];
     while( *x != pos ) ++x;
     if( *(x+1) != -1 ) {
@@ -326,6 +322,7 @@ inline state_t state_t::move(bool color, int pos) const {
             for( const int *q = x - 1; q > p; --q ) s.set_color(color, *q);
         }
     }
+
     return s;
 }
 
