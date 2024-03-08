@@ -15,7 +15,7 @@
 #include <stdexcept>
 
 time_t s_time;
-const double TIME_LIMIT = 10800.0; // limit time in s
+const double TIME_LIMIT = 7200.0; // limit time in s
 bool time_limit_reached = false;
 
 using namespace std;
