@@ -1,0 +1,24 @@
+Resultados obtenidos
+
+Algorithm: Negamax (minmax version)
+Moving along PV:
+34. White moves: value=-4, #expanded=0, #generated=0, seconds=3.00002e-06, #generated/second=0
+33. Black moves: value=-4, #expanded=1, #generated=1, seconds=2.00002e-06, #generated/second=499996
+32. White moves: value=-4, #expanded=3, #generated=4, seconds=2.00002e-06, #generated/second=1.99998e+06
+31. Black moves: value=-2147483647, #expanded=1, #generated=0, seconds=0, #generated/second=-nan
+30. White moves: value=-2147483647, #expanded=6, #generated=7, seconds=2.99996e-06, #generated/second=2.33336e+06
+29. Black moves: value=-2147483647, #expanded=7, #generated=8, seconds=3.00002e-06, #generated/second=2.66665e+06
+28. White moves: value=-2147483647, #expanded=49, #generated=66, seconds=1.8e-05, #generated/second=3.66666e+06
+27. Black moves: value=-2147483647, #expanded=98, #generated=130, seconds=2.9e-05, #generated/second=4.48276e+06
+26. White moves: value=-2147483647, #expanded=575, #generated=754, seconds=0.000148, #generated/second=5.0946e+06
+25. Black moves: value=-2147483647, #expanded=2361, #generated=3173, seconds=0.000572, #generated/second=5.5472e+06
+24. White moves: value=-2147483647, #expanded=6244, #generated=7959, seconds=0.001437, #generated/second=5.53862e+06
+23. Black moves: value=-2147483647, #expanded=37532, #generated=48266, seconds=0.00891, #generated/second=5.41706e+06
+22. White moves: value=-2147483647, #expanded=222933, #generated=287306, seconds=0.052922, #generated/second=5.42886e+06
+21. Black moves: value=-5, #expanded=1781833, #generated=2263734, seconds=0.405707, #generated/second=5.57973e+06
+20. White moves: value=-6, #expanded=6548613, #generated=8358060, seconds=1.4896, #generated/second=5.61092e+06
+19. Black moves: value=-6, #expanded=44595493, #generated=57894111, seconds=10.2386, #generated/second=5.65448e+06
+18. White moves: value=-6, #expanded=436519885, #generated=574629641, seconds=103.011, #generated/second=5.57834e+06
+17. Black moves: value=-6, #expanded=2805093090, #generated=3708262376, seconds=665.835, #generated/second=5.56934e+06
+
+
